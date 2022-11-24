@@ -1,0 +1,16 @@
+metrics_evaluation = {
+    "mae": "min",
+    "mse": "min",
+    "rmse": "min",
+    "mpe": "min",
+    "mape": "min",
+    "r2": "max",
+    "accuracy": "max",
+    "error_rate": "min",
+    "precision": "max",
+    "recall": "max",
+    "specificity": "max",
+    "fp_rate": "min",
+    "fn_rate": "min",
+    "f1_score": "max",
+}
