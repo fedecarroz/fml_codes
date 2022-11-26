@@ -49,9 +49,9 @@ class SGDLogisticRegression(BaseEstimator):
                 error = pred[i] - y_train[i]
 
                 if self.penalty == "l2":
-                    reg_gd = np.dot(self.lmd_, self.theta)
+                    reg_gd = self.lmd_ * self.theta
                 else:
-                    reg_gd = (np.dot(self.lmd_, np.abs(self.theta) / self.theta)) / 2
+                    reg_gd = (self.lmd_ * np.abs(self.theta) / self.theta) / 2
 
                 self.theta -= self.alpha * ((x_train[i] * error) + reg_gd)
 
@@ -76,9 +76,9 @@ class SGDLogisticRegression(BaseEstimator):
 
     def get_params(self):
         return {
-            'alpha': self.alpha,
-            'penalty': self.penalty,
-            'lmd': self.lmd,
+            "alpha": self.alpha,
+            "penalty": self.penalty,
+            "lmd": self.lmd,
         }
 
     def set_params(self, params: dict):

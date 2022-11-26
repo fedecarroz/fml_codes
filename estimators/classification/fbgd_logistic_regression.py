@@ -49,9 +49,9 @@ class FBGDLogisticRegression(BaseEstimator):
             pred_val = sigmoid(exp_val)
 
             if self.penalty == "l2":
-                reg_gd = np.dot(self.lmd_, self.theta)
+                reg_gd = self.lmd_ * self.theta
             else:
-                reg_gd = (np.dot(self.lmd_, np.abs(self.theta) / self.theta)) / 2
+                reg_gd = (self.lmd_ * np.abs(self.theta) / self.theta) / 2
 
             self.theta -= (1 / m) * self.alpha * (np.dot(x_train.T, error) + reg_gd)
 
