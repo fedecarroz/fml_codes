@@ -13,11 +13,6 @@ class GridSearchCV:
         self.best_params_ = None
         self.best_score_ = None
 
-        self.x_train = None
-        self.y_train = None
-        self.x_val = None
-        self.y_val = None
-
     def __comb_gen(self):
         keys = list(self.param_grid.keys())
         values = list(self.param_grid.values())
@@ -49,6 +44,7 @@ class GridSearchCV:
     def fit(self, x, y):
         for param in self.__comb_gen():
             fold_count = 1
+            scores = np.array([])
             for x_train, y_train, x_val, y_val in self.__create_folds(x, y):
                 self.estimator.set_params(param)
                 self.estimator.fit(x_train, y_train, x_val, y_val)
@@ -57,26 +53,24 @@ class GridSearchCV:
 
                 if self.scoring in perf.keys():
                     score = perf[self.scoring]
+                    scores = np.append(scores, score)
 
-                    if self.best_score_ is not None:
-                        if m_eval.metrics_evaluation[self.scoring] == "min":
-                            is_best_score = score < self.best_score_
-                        else:
-                            is_best_score = score > self.best_score_
-                    else:
-                        is_best_score = False
-
-                    if self.best_score_ is None or is_best_score:
-                        self.best_score_ = score
-                        self.best_params_ = param
-
-                        self.x_train = x_train
-                        self.y_train = y_train
-                        self.x_val = x_val
-                        self.y_val = y_val
-
-                    print(f"[CV {fold_count}/{self.cv}] ... {param} ... score: {score}")
+                    print(f"[CV {fold_count}/{self.cv}] ... {param} ... score {score}")
                 else:
                     raise Exception("No such scoring")
 
                 fold_count += 1
+
+            cv_score = scores.mean()
+
+            if self.best_score_ is not None:
+                if m_eval[self.scoring] == "min":
+                    is_best_score = cv_score < self.best_score_
+                else:
+                    is_best_score = cv_score > self.best_score_
+            else:
+                is_best_score = False
+
+            if self.best_score_ is None or is_best_score:
+                self.best_score_ = cv_score
+                self.best_params_ = param
