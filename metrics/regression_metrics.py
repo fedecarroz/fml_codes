@@ -3,9 +3,9 @@ import numpy as np
 
 class RegressionMetrics:
 
-    def __init__(self, pred, y):
-        self.pred = pred
+    def __init__(self, y, pred):
         self.y = y
+        self.pred = pred
         self.error = self.pred - self.y
 
     def compute_errors(self):
@@ -15,7 +15,7 @@ class RegressionMetrics:
             "rmse": self.rmse(),
             "mape": self.mape(),
             "mpe": self.mpe(),
-            "r2": self.r2_score(),
+            "r2_score": self.r2_score(),
         }
 
     def mae(self):
@@ -34,8 +34,7 @@ class RegressionMetrics:
         return np.average(self.error / self.y) * 100
 
     def r2_score(self):
-        sst = np.sum((self.y - self.y.mean()) ** 2)
         ssr = np.sum(self.error ** 2)
+        sst = np.sum((self.y - self.y.mean()) ** 2)
 
-        r2 = 1 - (ssr / sst)
-        return r2
+        return 1 - (ssr / sst)

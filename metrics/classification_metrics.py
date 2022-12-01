@@ -18,10 +18,10 @@ class ClassificationMetrics:
             "accuracy": self.accuracy(),
             "error_rate": self.error_rate(),
             "precision": self.precision(),
-            "recall": self.tp_rate(),
-            "specificity": self.tn_rate(),
-            "fp_rate": self.fp_rate(),
+            "recall": self.recall(),
             "fn_rate": self.fn_rate(),
+            "specificity": self.specificity(),
+            "fp_rate": self.fp_rate(),
             "f1_score": self.f1_score(),
         }
 
@@ -30,7 +30,7 @@ class ClassificationMetrics:
         tp, tn, fp, fn = 0, 0, 0, 0
 
         for i in range(m):
-            if self.y[i] == self.pred[i]:
+            if self.pred[i] == self.y[i]:
                 if self.pred[i] == 0:
                     tn += 1
                 else:
@@ -52,19 +52,20 @@ class ClassificationMetrics:
     def precision(self):
         return self.tp / (self.tp + self.fp)
 
-    # Recall or sensitivity
-    def tp_rate(self):
+    def recall(self):
         return self.tp / (self.tp + self.fn)
 
-    # Specificity
-    def tn_rate(self):
-        return self.tn / (self.fp + self.tn)
+    def fn_rate(self):
+        return 1 - self.recall()
+
+    def specificity(self):
+        return self.tn / (self.tn + self.fp)
 
     def fp_rate(self):
-        return 1 - self.tn_rate()
-
-    def fn_rate(self):
-        return 1 - self.tp_rate()
+        return 1 - self.specificity()
 
     def f1_score(self):
-        return 2 * self.precision() * self.tp_rate() / (self.precision() + self.tp_rate())
+        precision = self.precision()
+        recall = self.recall()
+
+        return 2 * (precision * recall) / (precision + recall)

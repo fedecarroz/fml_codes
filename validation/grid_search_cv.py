@@ -1,11 +1,10 @@
 import numpy as np
 
-from estimators.base_estimator import BaseEstimator
-from metrics import metrics_evaluation as m_eval
+from metrics.metrics_evaluation import metrics_evaluation as m_eval
 
 
 class GridSearchCV:
-    def __init__(self, estimator: BaseEstimator, param_grid: dict, scoring: str, cv=5):
+    def __init__(self, estimator, param_grid: dict, scoring: str, cv=5):
         self.estimator = estimator
         self.param_grid = param_grid
         self.scoring = scoring
@@ -48,8 +47,7 @@ class GridSearchCV:
             for x_train, y_train, x_val, y_val in self.__create_folds(x, y):
                 self.estimator.set_params(param)
                 self.estimator.fit(x_train, y_train, x_val, y_val)
-                x_val_p = np.delete(x_val, 0, axis=1)
-                perf = self.estimator.compute_performance(x_val_p, y_val)
+                perf = self.estimator.compute_performance(x_val, y_val)
 
                 if self.scoring in perf.keys():
                     score = perf[self.scoring]

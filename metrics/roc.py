@@ -22,7 +22,7 @@ class Roc:
 
             new_metrics = ClassificationMetrics(self.y, new_pred)
             fpr[i] = new_metrics.fp_rate()
-            tpr[i] = new_metrics.tp_rate()
+            tpr[i] = new_metrics.recall()
 
         return fpr, tpr, thresholds
 
